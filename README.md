@@ -15,3 +15,11 @@ Hardware:
 - NodeMCU Lua ESP8266 CH340G ESP-12E
 - 1 Channel 3V Relay 
 - DHT22/AM2302 Digital Temperature And Humidity Sensor Module
+
+Setup: 
+- Arduino sketch configuration: Please review the arduino file to setup your 2.4GHZ compatible wifi, configure your web access user. 
+- Please review the index.htm file in the data folder. This contains the path to your camera and lets you redesign the UI of the webportal. 
+
+Known Issues: 
+- Slow UI. It downloads a lot on first load but it gets better. You can remedy this by removing some of the features or the webUI all together. 
+- Ugly. I did what I could with what I had. 
