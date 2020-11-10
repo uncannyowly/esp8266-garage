@@ -16,10 +16,25 @@ Hardware:
 - 1 Channel 3V Relay 
 - DHT22/AM2302 Digital Temperature And Humidity Sensor Module
 
-Setup: 
+<U>Prerequisites</U>
+- Arduino dev environment
+- ESP8266 proper drivers installed. 
+- Possibly some additional packages I forgot, sorry. Google is your friend?  
+
+<U>Setup:</U>
 - Arduino sketch configuration: Please review the arduino file to setup your 2.4GHZ compatible wifi, configure your web access user. 
 - Please review the index.htm file in the data folder. This contains the path to your camera and lets you redesign the UI of the webportal. 
 
-Known Issues: 
+<U>Known Issues:</U>
 - Slow UI. It downloads a lot on first load but it gets better. You can remedy this by removing some of the features or the webUI all together. 
 - Ugly. I did what I could with what I had. 
+
+<U>UI Preview: </U>
+<img "screenshot-01.png">
+<img "screenshot-02.png">
+<img "screenshot-03.png">
+
+<U>Rest Info:</U>
+<img "screenshot-04.png">
+
+<U></U>
