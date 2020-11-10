@@ -30,11 +30,11 @@ Hardware:
 - Ugly. I did what I could with what I had. 
 
 <U>UI Preview: </U>
-<img "screenshot-01.png">
-<img "screenshot-02.png">
-<img "screenshot-03.png">
+![HomePage](/images/screenshot-01.png)
+![CameraOutput](/images/screenshot-02.png)
+![FancyDials](/images/screenshot-03.png)
 
 <U>Rest Info:</U>
-<img "screenshot-04.png">
+![RestAPI](/images/screenshot-04.png)
 
 <U></U>
