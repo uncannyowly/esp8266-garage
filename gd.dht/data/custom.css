@@ -1,0 +1,79 @@
+body {
+	margin: 0;
+	font-family: LED;
+	font-size: 12px; }
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-size:100% 1px;
+  background-image:linear-gradient(180deg,#242424,#242424 100%)
+  ;}
+
+li {
+  float: left;
+}
+
+li a.active {background-color: #4CAF50;}
+
+li.right {float: right; background-color: #4CAF50}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+  background-color: #111;
+}
+
+img.stretch {
+    max-width: 100%;
+	max-height: 610px;
+    height: auto;
+    width: auto\9; /* ie8 */
+}
+
+.content {
+        width: 850px;
+        height: 100%;
+        background-color: blue;
+		font-family: LED;
+
+        position:absolute; /*it can be fixed too*/
+        left:0; right:0;
+        top:0; bottom:0;
+        margin:auto;
+
+        /*this to solve "the content will not be cut when the window is smaller than the content": */
+        max-width:850px;
+        max-height:100%;
+        overflow:auto;	
+    }
+	{ box-sizing: border-box; }
+		.column {
+		float: left;
+		width: 50%;
+    }
+
+    .row:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+    .poo { 
+		position: relative;
+		top: 50%;
+		left: 10%;
+		font-size: 14px; 
+	}
+	td { 
+		font-family: LED; 
+		padding: 0px;
+	}

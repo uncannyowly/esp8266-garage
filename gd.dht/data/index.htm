@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="\onsenui-min.css">
+      <link rel="stylesheet" href="\dark-onsen-min.css">
+      <link rel="stylesheet" href="\custom.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <script src="\jquery.min.js"></script>
+      <script src="\gauge.min.js"></script>
+      <script type="text/javascript">
+         $(function(){
+             $("#div2").hide();
+             $("#div3").hide();
+             $("#cam").on("click", function(){
+                // $("#div1, #div2").toggle();
+         	    $("#div1").hide();
+         	    $("#div3").hide();
+                 $("#div2").show();
+             });
+             $("#temp").on("click", function(){
+                 //$("#div1, #div3").toggle();
+         	    $("#div1").hide();
+         	    $("#div2").hide();
+                 $("#div3").show();
+             });
+             $("#home").on("click", function(){
+                // $("#div1, #div1").toggle();
+         	    $("#div2").hide();
+         	    $("#div3").hide();
+                 $("#div1").show();	   
+             });
+         });
+      </script>
+   </head>
+   <body bgcolor=black>
+   <font face=LED>
+      <ul class="topnav" >
+         <li><a id="cam" href="#cam"><i class="fa fa-fw fa-video-camera"></i> Camera</a></li>
+         <li><a id="temp" href="#temp"><i class="fa fa-fw fa-thermometer-half"></i> Temps</a></li>
+         <li class="right"><a id="home" href="#home">[ garage door ]</a></li>
+      </ul>
+
+      <div id="div1" style="padding:0 16px;">
+		<div class="card card--material">
+         <div class="card__content card--material__content">
+            <center>
+                  <DIV class=row style="text-align: center; ">
+                     <center><img width=125 style="border:0px;padding: 2px 2px;" id="gdimage" src="loading.gif"/><br></center>
+                  </div>
+					<br>
+                  <DIV class=row style="text-align: center; ">
+                     <center><button class="button--cta" style="height: 65px; width: 80%; margin: 0 auto;" onclick="trigDoor()">Clicker</button></center>
+					 <br>
+                  </div>
+			</center>
+         </div>
+		</div>
+		<div class="card card--material">
+		<div class="card__title card--material__title"><font face=led size=4 color=white><u>Status:</U></font></div>
+         <div class="card__content card--material__content">
+            <center>
+				<DIV class=row style="text-align: left; ">
+				 <P class=poo>
+					Garage Door State : <span id="GDstate">NA</span><br>
+					Garage Temperature : <span id="GDtemp">NA</span>&deg;F<br>
+					Garage Humidity : <span id="GDhum">NA</span>%<br>
+					Garage Heat Index : <span id="GDhindex">NA</span>&deg;F
+				 </P>
+				</DIV>
+			</center>
+         </div>
+		</div>
+      </div>
+      <div id="div2" style="padding:0 16px;">
+         <div class="card card--material">
+            <div class="card__content card--material__content">
+               <center><img class="stretch" id="secvid" height="100%" width="100%" src="http://[your_camera_ip]/cgi-bin/api.cgi?cmd=Snap&channel=0&rs=wuuPhkmUCeI9WG7C&user=admin&password=[yourCameraPassword]"><BR></center>
+            </div>
+         </div>
+      </div>
+      </div>
+      <div id="div3" style="padding:0 16px;">
+			<BR>
+			<BR>
+               <center>
+                  <table>
+                     <tr>
+                        <td>
+                           <canvas id="an_gauge_1" data-highlights="-20 60 #0000ff,60 80 #00ff00,80 90 #ffff00,90 100 #ff1e00,100 120 #ff0a0a" data-colors-plate="#ccc"  data-title="Temp" data-units="&deg;F" data-major-ticks="-20 -10 0 10 20 30 40 50 60 70 80 90 100 110 120" data-type="radial-gauge" data-min-value="-20" data-max-value="120" data-onready="setInterval( function() { Gauge.Collection.get('an_gauge_1').setValue(data_val1);}, 2000);"></canvas>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td>
+                           <canvas id="an_gauge_2" data-highlights="0 30 #00ff00,30 40 #ffff00,40 100 #ff1e00"  data-colors-plate="#ccc"  data-title="Humidity" data-units="%" data-major-ticks="0 10 20 30 40 50 60 70 80 90 100" data-type="radial-gauge" data-min-value="0" data-max-value="100" data-onready="setInterval( function() { Gauge.Collection.get('an_gauge_2').setValue(data_val2);}, 2000);"></canvas>
+                        </td>
+					 </tr>
+                     <tr>
+                        <td>
+                           <canvas id="an_gauge_3" data-highlights="-20 60 #0000ff,60 80 #00ff00,80 90 #ffff00,90 100 #ff1e00,100 120 #ff0a0a"  data-colors-plate="#ccc"  data-title="Heat Index" data-units="&deg;F" data-major-ticks="-20 -10 0 10 20 30 40 50 60 70 80 90 100 110 120" data-type="radial-gauge" data-min-value="-20" data-max-value="120" data-onready="setInterval( function() { Gauge.Collection.get('an_gauge_3').setValue(data_val3);}, 2000);"></canvas>
+                        </td>
+                     </tr>
+                  </table>
+               </center>
+
+      </div>
+      <div class="bottom-bar">
+         <div class="bottom-bar__line-height" style="text-align:right;font-size: 11px;">&copy; h00tLabs 2020&nbsp;</div>
+      </div>
+   </body>
+   <script>
+      var data_val1 = -20;
+      var data_val2 = 0;
+      var data_val3 = -20;
+      var title1;
+	  var cam_src = 'YourURLStuffHere'; 
+      setInterval(function() {
+        // Call a function repetatively with 2.1 Second interval
+        getJSON();
+      }, 3000); //2000mSeconds update rate     
+      function getJSON(){
+      	var xmlhttp = new XMLHttpRequest();
+      	xmlhttp.onreadystatechange = function() {
+      		if (this.readyState == 4 && this.status == 200) {
+      			var myObj ='';
+      			myObj = JSON.parse(this.responseText);
+      			document.getElementById("GDhum").innerHTML = myObj.humidity;
+      			document.getElementById("GDtemp").innerHTML = myObj.temperatureF;
+      			document.getElementById("GDhindex").innerHTML = myObj.heat_index;
+				$("#secvid").attr('src','http://[your_camera_ip]/cgi-bin/api.cgi?cmd=Snap&channel=0&rs=' +  myObj.session + '&user=admin&password=[yourCameraPassword]');
+      			if (myObj.door_state == "Open"){
+      				$("#gdimage").attr('src','\gOpen.svg');
+      				document.getElementById("GDstate").innerHTML = "Open";
+      			}else{
+      				$("#gdimage").attr('src','\gClosed.svg');
+      				document.getElementById("GDstate").innerHTML = "Closed";				
+      			}
+      			data_val1 = myObj.temperatureF;
+      			data_val2 = myObj.humidity;
+      			data_val3 = myObj.heat_index;
+      		}
+      	};
+      	xmlhttp.open("GET", "/getENV", true);
+      	xmlhttp.send();
+      }    
+      function trigDoor() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+      	if (this.readyState == 4 && this.status == 200) {
+      	  document.getElementById("GDstate").innerHTML =
+      	  this.responseText;
+      	}
+        };
+        xhttp.open("GET", "/triggerGD", true);
+        xhttp.send();
+      }
+      ///////////////////////////MOIDIFIED GAUGE CODE FROM PACKER///////////////////////////	
+      var Gauge = function(f) {
+      	f.title = f.renderTo.getAttribute('data-title');
+      	Gauge.Collection.push(this);
+      	this.config = {
+      		renderTo: null,
+      		width: 300,
+      		height: 300,
+      		title: true,
+      		maxValue: 100,
+      		minValue: 0,
+      		majorTicks: ['0', '20', '40', '60', '80', '100', '110', '120'],
+      		minorTicks: 10,
+      		strokeTicks: true,
+      		units: false,
+      		valueFormat: {
+      			int: 3,
+      			dec: 2
+      		},
+      		glow: true,
+      		animation: {
+      			delay: 10,
+      			duration: 250,
+      			fn: 'cycle'
+      		},
+      		colors: {
+      			plate: '#eee',
+      			majorTicks: '#444',
+      			minorTicks: '#666',
+      			title: '#888',
+      			units: '#888',
+      			numbers: '#444',
+      			needle: {
+      				start: 'rgba(240, 128, 128, 1)',
+      				end: 'rgba(255, 160, 122, .9)'
+      			}
+      		},
+      		highlights: [{
+      				from: 20,
+      				to: 60,
+      				color: '#eee'
+      			},
+      			{
+      				from: 60,
+      				to: 80,
+      				color: '#ccc'
+      			},
+      			{
+      				from: 80,
+      				to: 100,
+      				color: '#999'
+      			}
+      		]
+      	};
+      	var g = 0,
+      		self = this,
+      		fromValue = 0,
+      		toValue = 0,
+      		imready = false;
+      	this.setValue = function(a) {
+      		fromValue = f.animation ? g : a;
+      		var b = (f.maxValue - f.minValue) / 100;
+      		toValue = a > f.maxValue ? toValue = f.maxValue + b : a < f.minValue ? f.minValue - b : a;
+      		g = a;
+      		f.animation ? animate() : this.draw();
+      		return this
+      	};
+      	this.setRawValue = function(a) {
+      		fromValue = g = a;
+      		this.draw();
+      		return this
+      	};
+      	this.clear = function() {
+      		g = fromValue = toValue = this.config.minValue;
+      		this.draw();
+      		return this
+      	};
+      	this.getValue = function() {
+      		return g
+      	};
+      	this.onready = function() {};
+      
+      	function applyRecursive(a, b) {
+      		for (var i in b) {
+      			if (typeof b[i] == "object" && !(Object.prototype.toString.call(b[i]) === '[object Array]') && i != 'renderTo') {
+      				if (typeof a[i] != "object") {
+      					a[i] = {}
+      				}
+      				applyRecursive(a[i], b[i])
+      			} else {
+      				a[i] = b[i]
+      			}
+      		}
+      	};
+      	applyRecursive(this.config, f);
+      	this.config.minValue = parseFloat(this.config.minValue);
+      	this.config.maxValue = parseFloat(this.config.maxValue);
+      	f = this.config;
+      	fromValue = g = f.minValue;
+      	if (!f.renderTo) {
+      		throw Error("Canvas element was not specified when creating the Gauge object!");
+      	}
+      	var j = f.renderTo.tagName ? f.renderTo : document.getElementById(f.renderTo),
+      		ctx = j.getContext('2d'),
+      		cache,
+      		CW,
+      		CH,
+      		CX,
+      		CY,
+      		max,
+      		cctx;
+      
+      	function baseInit() {
+      		j.width = f.width;
+      		j.height = f.height;
+      		cache = j.cloneNode(true);
+      		cctx = cache.getContext('2d');
+      		CW = j.width;
+      		CH = j.height;
+      		CX = CW / 2;
+      		CY = CH / 2;
+      		max = CX < CY ? CX : CY;
+      		cache.i8d = false;
+      		cctx.translate(CX, CY);
+      		cctx.save();
+      		ctx.translate(CX, CY);
+      		ctx.save()
+      	};
+      	baseInit();
+      	this.updateConfig = function(a) {
+      		applyRecursive(this.config, a);
+      		baseInit();
+      		this.draw();
+      		return this
+      	};
+      	var k = {
+      		linear: function(p) {
+      			return p
+      		},
+      		quad: function(p) {
+      			return Math.pow(p, 2)
+      		},
+      		quint: function(p) {
+      			return Math.pow(p, 5)
+      		},
+      		cycle: function(p) {
+      			return 1 - Math.sin(Math.acos(p))
+      		},
+      		bounce: function(p) {
+      			return 1 - (function(p) {
+      				for (var a = 0, b = 1; 1; a += b, b /= 2) {
+      					if (p >= (7 - 4 * a) / 11) {
+      						return -Math.pow((11 - 6 * a - 11 * p) / 4, 2) + Math.pow(b, 2)
+      					}
+      				}
+      			})(1 - p)
+      		},
+      		elastic: function(p) {
+      			return 1 - (function(p) {
+      				var x = 1.5;
+      				return Math.pow(2, 10 * (p - 1)) * Math.cos(20 * Math.PI * x / 3 * p)
+      			})(1 - p)
+      		}
+      	};
+      	var l = null;
+      
+      	function _animate(d) {
+      		var e = new Date;
+      		l = setInterval(function() {
+      				var a = new Date - e,
+      					progress = a / d.duration;
+      				if (progress > 1) {
+      					progress = 1
+      				}
+      				var b = typeof d.delta == "function" ? d.delta : k[d.delta];
+      				var c = b(progress);
+      				d.step(c);
+      				if (progress == 1) {
+      					clearInterval(l)
+      				}
+      			},
+      			d.delay || 10)
+      	};
+      
+      	function animate() {
+      		l && clearInterval(l);
+      		var b = (toValue - fromValue),
+      			from = fromValue,
+      			cfg = f.animation;
+      		_animate({
+      			delay: cfg.delay,
+      			duration: cfg.duration,
+      			delta: cfg.fn,
+      			step: function(a) {
+      				fromValue = parseFloat(from) + b * a;
+      				self.draw()
+      			}
+      		})
+      	};
+      	ctx.lineCap = "round";
+      	this.draw = function() {
+      		if (!cache.i8d) {
+      			cctx.clearRect(-CX, -CY, CW, CH);
+      			cctx.save();
+      			var a = ctx;
+      			ctx = cctx;
+      			drawPlate();
+      			drawHighlights();
+      			drawMinorTicks();
+      			drawMajorTicks();
+      			drawNumbers();
+      			//f.title = 'Cabin temp';
+      			drawTitle();
+      			drawUnits();
+      			cache.i8d = true;
+      			ctx = a;
+      			delete a
+      		}
+      		ctx.clearRect(-CX, -CY, CW, CH);
+      		ctx.save();
+      		ctx.drawImage(cache, -CX, -CY, CW, CH);
+      		if (!Gauge.initialized) {
+      			var b = setInterval(function() {
+      					if (!Gauge.initialized) {
+      						return
+      					}
+      					clearInterval(b);
+      					drawValueBox();
+      					drawNeedle();
+      					if (!imready) {
+      						self.onready && self.onready();
+      						imready = true
+      					}
+      				},
+      				10)
+      		} else {
+      			drawValueBox();
+      			drawNeedle();
+      			if (!imready) {
+      				self.onready && self.onready();
+      				imready = true
+      			}
+      		}
+      		return this
+      	};
+      
+      	function radians(a) {
+      		return a * Math.PI / 180
+      	};
+      
+      	function lgrad(a, b, c) {
+      		var d = ctx.createLinearGradient(0, 0, 0, c);
+      		d.addColorStop(0, a);
+      		d.addColorStop(1, b);
+      		return d
+      	};
+      
+      	function drawPlate() {
+      		var a = max / 100 * 93,
+      			d0 = max - a,
+      			r1 = max / 100 * 91,
+      			d1 = max - r1,
+      			r2 = max / 100 * 88,
+      			d2 = max - r2;
+      		r3 = max / 100 * 85;
+      		ctx.save();
+      		if (f.glow) {
+      			ctx.shadowBlur = d0;
+      			ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'
+      		}
+      		ctx.beginPath();
+      		ctx.arc(0, 0, a, 0, Math.PI * 2, true);
+      		ctx.fillStyle = lgrad('#ddd', '#aaa', a);
+      		ctx.fill();
+      		ctx.restore();
+      		ctx.beginPath();
+      		ctx.arc(0, 0, r1, 0, Math.PI * 2, true);
+      		ctx.fillStyle = lgrad('#fafafa', '#ccc', r1);
+      		ctx.fill();
+      		ctx.beginPath();
+      		ctx.arc(0, 0, r2, 0, Math.PI * 2, true);
+      		ctx.fillStyle = lgrad('#eee', '#f0f0f0', r2);
+      		ctx.fill();
+      		ctx.beginPath();
+      		ctx.arc(0, 0, r3, 0, Math.PI * 2, true);
+      		ctx.fillStyle = f.colors.plate;
+      		ctx.fill();
+      		ctx.save()
+      	};
+      
+      	function drawMajorTicks() {
+      		var r = max / 100 * 81;
+      		ctx.lineWidth = 2;
+      		ctx.strokeStyle = f.colors.majorTicks;
+      		ctx.save();
+      		for (var i = 0; i < f.majorTicks.length; ++i) {
+      			var a = 45 + i * (270 / (f.majorTicks.length - 1));
+      			ctx.rotate(radians(a));
+      			ctx.beginPath();
+      			ctx.moveTo(0, r);
+      			ctx.lineTo(0, r - max / 100 * 15);
+      			ctx.stroke();
+      			ctx.restore();
+      			ctx.save()
+      		}
+      		if (f.strokeTicks) {
+      			ctx.rotate(radians(90));
+      			ctx.beginPath();
+      			ctx.arc(0, 0, r, radians(45), radians(315), false);
+      			ctx.stroke();
+      			ctx.restore();
+      			ctx.save()
+      		}
+      	};
+      
+      	function drawMinorTicks() {
+      		var r = max / 100 * 81;
+      		ctx.lineWidth = 1;
+      		ctx.strokeStyle = f.colors.minorTicks;
+      		ctx.save();
+      		var b = f.minorTicks * (f.majorTicks.length - 1);
+      		for (var i = 0; i < b; ++i) {
+      			var a = 45 + i * (270 / b);
+      			ctx.rotate(radians(a));
+      			ctx.beginPath();
+      			ctx.moveTo(0, r);
+      			ctx.lineTo(0, r - max / 100 * 7.5);
+      			ctx.stroke();
+      			ctx.restore();
+      			ctx.save()
+      		}
+      	};
+      
+      	function drawNumbers() {
+      		var r = max / 100 * 55;
+      		for (var i = 0; i < f.majorTicks.length; ++i) {
+      			var a = 45 + i * (270 / (f.majorTicks.length - 1)),
+      				p = rpoint(r, radians(a));
+      			ctx.font = 20 * (max / 200) + "px Arial";
+      			ctx.fillStyle = f.colors.numbers;
+      			ctx.lineWidth = 0;
+      			ctx.textAlign = "center";
+      			ctx.fillText(f.majorTicks[i], p.x, p.y + 3)
+      		}
+      	};
+      
+      	function drawTitle() {
+      		if (!f.title) {
+      			return
+      		}
+      		ctx.save();
+      		ctx.font = 24 * (max / 200) + "px Arial";
+      		ctx.fillStyle = f.colors.title;
+      		ctx.textAlign = "center";
+      		ctx.fillText(f.title, 0, -max / 4.25); //make f.title = 'a string'
+      		ctx.restore()
+      	};
+      
+      	function drawUnits() {
+      		if (!f.units) {
+      			return
+      		}
+      		ctx.save();
+      		ctx.font = 22 * (max / 200) + "px Arial";
+      		ctx.fillStyle = f.colors.units;
+      		ctx.textAlign = "center";
+      		ctx.fillText(f.units, 0, max / 3.25);
+      		ctx.restore()
+      	};
+      
+      	function padValue(a) {
+      		var b = f.valueFormat.dec,
+      			cint = f.valueFormat.int;
+      		a = parseFloat(a);
+      		var n = (a < 0);
+      		a = Math.abs(a);
+      		if (b > 0) {
+      			a = a.toFixed(b).toString().split('.');
+      			for (var i = 0, s = cint - a[0].length; i < s; ++i) {
+      				a[0] = '0' + a[0]
+      			}
+      			a = (n ? '-' : '') + a[0] + '.' + a[1]
+      		} else {
+      			a = Math.round(a).toString();
+      			for (var i = 0, s = cint - a.length; i < s; ++i) {
+      				a = '0' + a
+      			}
+      			a = (n ? '-' : '') + a
+      		}
+      		return a
+      	};
+      
+      	function rpoint(r, a) {
+      		var x = 0,
+      			y = r,
+      			sin = Math.sin(a),
+      			cos = Math.cos(a),
+      			X = x * cos - y * sin,
+      			Y = x * sin + y * cos;
+      		return {
+      			x: X,
+      			y: Y
+      		}
+      	};
+      
+      	function drawHighlights() {
+      		ctx.save();
+      		var a = max / 100 * 81;
+      		var b = a - max / 100 * 15;
+      		for (var i = 0, s = f.highlights.length; i < s; i++) {
+      			var c = f.highlights[i],
+      				vd = (f.maxValue - f.minValue) / 270,
+      				sa = radians(45 + (c.from - f.minValue) / vd),
+      				ea = radians(45 + (c.to - f.minValue) / vd);
+      			ctx.beginPath();
+      			ctx.rotate(radians(90));
+      			ctx.arc(0, 0, a, sa, ea, false);
+      			ctx.restore();
+      			ctx.save();
+      			var d = rpoint(b, sa),
+      				pe = rpoint(a, sa);
+      			ctx.moveTo(d.x, d.y);
+      			ctx.lineTo(pe.x, pe.y);
+      			var e = rpoint(a, ea),
+      				pe1 = rpoint(b, ea);
+      			ctx.lineTo(e.x, e.y);
+      			ctx.lineTo(pe1.x, pe1.y);
+      			ctx.lineTo(d.x, d.y);
+      			ctx.closePath();
+      			ctx.fillStyle = c.color;
+      			ctx.fill();
+      			ctx.beginPath();
+      			ctx.rotate(radians(90));
+      			ctx.arc(0, 0, b, sa - 0.2, ea + 0.2, false);
+      			ctx.restore();
+      			ctx.closePath();
+      			ctx.fillStyle = f.colors.plate;
+      			ctx.fill();
+      			ctx.save()
+      		}
+      	};
+      
+      	function drawNeedle() {
+      		var a = max / 100 * 12,
+      			r2 = max / 100 * 8,
+      			rIn = max / 100 * 77,
+      			rOut = max / 100 * 20,
+      			pad1 = max / 100 * 4,
+      			pad2 = max / 100 * 2,
+      			shad = function() {
+      				ctx.shadowOffsetX = 2;
+      				ctx.shadowOffsetY = 2;
+      				ctx.shadowBlur = 10;
+      				ctx.shadowColor = 'rgba(188, 143, 143, 0.45)'
+      			};
+      		shad();
+      		ctx.save();
+      		if (fromValue < 0) {
+      			fromValue = Math.abs(f.minValue - fromValue)
+      		} else if (f.minValue > 0) {
+      			fromValue -= f.minValue
+      		} else {
+      			fromValue = Math.abs(f.minValue) + fromValue
+      		}
+      		ctx.rotate(radians(45 + fromValue / ((f.maxValue - f.minValue) / 270)));
+      		ctx.beginPath();
+      		ctx.moveTo(-pad2, -rOut);
+      		ctx.lineTo(-pad1, 0);
+      		ctx.lineTo(-1, rIn);
+      		ctx.lineTo(1, rIn);
+      		ctx.lineTo(pad1, 0);
+      		ctx.lineTo(pad2, -rOut);
+      		ctx.closePath();
+      		ctx.fillStyle = lgrad(f.colors.needle.start, f.colors.needle.end, rIn - rOut);
+      		ctx.fill();
+      		ctx.beginPath();
+      		ctx.lineTo(-0.5, rIn);
+      		ctx.lineTo(-1, rIn);
+      		ctx.lineTo(-pad1, 0);
+      		ctx.lineTo(-pad2, -rOut);
+      		ctx.lineTo(pad2 / 2 - 2, -rOut);
+      		ctx.closePath();
+      		ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+      		ctx.fill();
+      		ctx.restore();
+      		shad();
+      		ctx.beginPath();
+      		ctx.arc(0, 0, a, 0, Math.PI * 2, true);
+      		ctx.fillStyle = lgrad('#f0f0f0', '#ccc', a);
+      		ctx.fill();
+      		ctx.restore();
+      		ctx.beginPath();
+      		ctx.arc(0, 0, r2, 0, Math.PI * 2, true);
+      		ctx.fillStyle = lgrad("#e8e8e8", "#f5f5f5", r2);
+      		ctx.fill()
+      	};
+      
+      	function roundRect(x, y, w, h, r) {
+      		ctx.beginPath();
+      		ctx.moveTo(x + r, y);
+      		ctx.lineTo(x + w - r, y);
+      		ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      		ctx.lineTo(x + w, y + h - r);
+      		ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      		ctx.lineTo(x + r, y + h);
+      		ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      		ctx.lineTo(x, y + r);
+      		ctx.quadraticCurveTo(x, y, x + r, y);
+      		ctx.closePath()
+      	};
+      
+      	function drawValueBox() {
+      		ctx.save();
+      		ctx.font = 40 * (max / 200) + "px Led";
+      		var a = padValue(g),
+      			tw = ctx.measureText('-' + padValue(0)).width,
+      			y = max - max / 100 * 33,
+      			x = 0,
+      			th = 0.12 * max;
+      		ctx.save();
+      		roundRect(-tw / 2 - 0.025 * max, y - th - 0.04 * max, tw + 0.05 * max, th + 0.07 * max, 0.025 * max);
+      		var b = ctx.createRadialGradient(x, y - 0.12 * max - 0.025 * max + (0.12 * max + 0.045 * max) / 2, max / 10, x, y - 0.12 * max - 0.025 * max + (0.12 * max + 0.045 * max) / 2, max / 5);
+      		b.addColorStop(0, "#888");
+      		b.addColorStop(1, "#666");
+      		ctx.strokeStyle = b;
+      		ctx.lineWidth = 0.05 * max;
+      		ctx.stroke();
+      		ctx.shadowBlur = 0.012 * max;
+      		ctx.shadowColor = 'rgba(0, 0, 0, 1)';
+      		ctx.fillStyle = "#babab2";
+      		ctx.fill();
+      		ctx.restore();
+      		ctx.shadowOffsetX = 0.004 * max;
+      		ctx.shadowOffsetY = 0.004 * max;
+      		ctx.shadowBlur = 0.012 * max;
+      		ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+      		ctx.fillStyle = "#444";
+      		ctx.textAlign = "center";
+      		ctx.fillText(a, -x, y);
+      		ctx.restore()
+      	}
+      };
+      Gauge.initialized = false;
+      (function() {
+      	var d = document,
+      		h = d.getElementsByTagName('head')[0],
+      		ie = navigator.userAgent.toLocaleLowerCase().indexOf('msie') != -1,
+      		url = 'digital-7-mono.' + (ie ? 'eot' : 'ttf'),
+      		text = "@font-face { font-family: 'Led';src: url('digital-7-mono.eot');src: url('digital-7-mono.eot?#iefix') format('embedded-opentype'),url('digital-7-mono.ttf') format('truetype');}",
+      		ss,
+      		r = d.createElement('style');
+      	r.type = 'text/css';
+      	if (ie) {
+      		h.appendChild(r);
+      		ss = r.styleSheet;
+      		ss.cssText = text
+      	} else {
+      		try {
+      			r.appendChild(d.createTextNode(text))
+      		} catch (e) {
+      			r.cssText = text
+      		}
+      		h.appendChild(r);
+      		ss = r.styleSheet ? r.styleSheet : (r.sheet || d.styleSheets[d.styleSheets.length - 1])
+      	}
+      	var b = setInterval(function() {
+      			if (!d.body) {
+      				return
+      			}
+      			clearInterval(b);
+      			var a = d.createElement('div');
+      			a.style.fontFamily = 'Led';
+      			a.style.position = 'absolute';
+      			a.style.height = a.style.width = 0;
+      			a.style.overflow = 'hidden';
+      			a.innerHTML = '.';
+      			d.body.appendChild(a);
+      			setTimeout(function() {
+      					Gauge.initialized = true;
+      					a.parentNode.removeChild(a)
+      				},
+      				250)
+      		},
+      		1)
+      })();
+      Gauge.Collection = [];
+      Gauge.Collection.get = function(a) {
+      	if (typeof(a) == 'string') {
+      		for (var i = 0, s = this.length; i < s; i++) {
+      			if (this[i].config.renderTo.getAttribute('id') == a) {
+      				return this[i]
+      			}
+      		}
+      	} else if (typeof(a) == 'number') {
+      		return this[a]
+      	} else {
+      		return null
+      	}
+      };  
+      function domReady(a) {
+      	if (window.addEventListener) {
+      		window.addEventListener('DOMContentLoaded', a, false)
+      	} else {
+      		window.attachEvent('onload', a)
+      	}
+      }
+      domReady(function() {
+      	function toCamelCase(a) {
+      		var b = a[0];
+      		for (var i = 1, s = a.length; i < s; i++) {
+      			b += a[i].substr(0, 1).toUpperCase() + a[i].substr(1, a[i].length - 1)
+      		}
+      		return b
+      	};
+      
+      	function trim(a) {
+      		return a.replace(/^\s+|\s+$/g, '')
+      	};
+      	var c = document.getElementsByTagName('canvas');
+      	for (var i = 0, s = c.length; i < s; i++) {
+      		if (c[i].getAttribute('data-type') == 'radial-gauge') {
+      			var d = c[i],
+      				config = {},
+      				prop, w = parseInt(d.getAttribute('width')),
+      				h = parseInt(d.getAttribute('height'));
+      			config.renderTo = d;
+      			if (w) {
+      				config.width = w
+      			}
+      			if (h) {
+      				config.height = h
+      			}
+      			for (var e = 0, ss = d.attributes.length; e < ss; e++) {
+      				prop = d.attributes.item(e).nodeName;
+      				//console.log("prop: " + prop);
+      				if (prop != 'data-type' && prop.substr(0, 5) == 'data-') {
+      					var f = prop.substr(5, prop.length - 5).toLowerCase().split('-'),
+      						attrValue = d.getAttribute(prop);
+      					if (!attrValue) {
+      						continue
+      					}
+      					//console.log(f[0] + " - " + f[1]);
+      					switch (f[0]) {
+      						case 'colors': {
+      							//console.log("------ case: colors");
+      							if (f[1]) {
+      								if (!config.colors) {
+      									config.colors = {}
+      								}
+      								if (f[1] == 'needle') {
+      									var k = attrValue.split(/\s+/);
+      									if (k[0] && k[1]) {
+      										config.colors.needle = {
+      											start: k[0],
+      											end: k[1]
+      										}
+      										config.colors.needle = attrValue
+      									} else {
+      										config.colors.needle = attrValue
+      									}
+      								} else {
+      									f.shift();
+      									config.colors[toCamelCase(f)] = attrValue
+      
+      								}
+      							}
+      							break
+      						}
+      						case 'highlights': {
+      							//console.log("------ case: highlights");
+      							if (!config.highlights) {
+      								config.highlights = []
+      							}
+      							hls = attrValue.split(',');
+      							for (var j = 0, l = hls.length; j < l; j++) {
+      								var m = trim(hls[j]).split(/\s+/),
+      									hlCfg = {};
+      								if (m[0] && m[0] != '') {
+      									hlCfg.from = m[0]
+      								}
+      								if (m[1] && m[1] != '') {
+      									hlCfg.to = m[1]
+      								}
+      								if (m[2] && m[2] != '') {
+      									hlCfg.color = m[2]
+      								}
+      								config.highlights.push(hlCfg)
+      							}
+      							break
+      						}
+      						case 'animation': {
+      							//console.log("------ case: animation");
+      							if (f[1]) {
+      								if (!config.animation) {
+      									config.animation = {}
+      								}
+      								if (f[1] == 'fn' && /^\s*function\s*\(/.test(attrValue)) {
+      									attrValue = eval('(' + attrValue + ')')
+      								}
+      								config.animation[f[1]] = attrValue
+      							}
+      							break
+      						}
+      						default: {
+      							//console.log("------ case: default");
+      							var n = toCamelCase(f);
+      							if (n == 'onready') {
+      								continue
+      							}
+      							if (n == 'majorTicks') {
+      								attrValue = attrValue.split(/\s+/)
+      							} else if (n == 'strokeTicks' || n == 'glow') {
+      								attrValue = attrValue == 'true' ? true : false
+      							} else if (n == 'valueFormat') {
+      								var o = attrValue.split('.');
+      								if (o.length == 2) {
+      									attrValue = {
+      										int: parseInt(o[0]),
+      										dec: parseInt(o[1])
+      									}
+      								} else {
+      									continue
+      								}
+      							}
+      							config[n] = attrValue;
+      							break
+      						}
+      					}
+      				}
+      			}
+      			var g = new Gauge(config);
+      			if (d.getAttribute('data-value')) {
+      				g.setRawValue(parseFloat(d.getAttribute('data-value')))
+      			}
+      			if (d.getAttribute('data-onready')) {
+      				g.onready = function() {
+      					eval(this.config.renderTo.getAttribute('data-onready'))
+      				}
+      			}
+      			g.draw()
+      		}
+      	}
+      });    
+   </script>
+</html>
