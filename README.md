@@ -31,7 +31,7 @@ This project has satisfied those requirements and provided me a platform for fut
 - Slow UI. It downloads a lot on first load but it gets better. You can remedy this by removing some of the features or the webUI all together. 
 - Ugly. I did what I could with what I had. 
 
-**UI Preview: **
+**UI Preview:**
 ![HomePage](/images/screenshot-01.png)
 ![CameraOutput](/images/screenshot-02.png)
 ![FancyDials](/images/screenshot-03.png)
