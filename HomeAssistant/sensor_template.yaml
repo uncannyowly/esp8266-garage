@@ -1,0 +1,25 @@
+  - platform: rest
+    name: garage_temps
+    json_attributes:
+      - humidity
+      - temperatureF
+      - heat_index
+    resource: http://[your_IP]/getENV
+    value_template: 'OK'
+  - platform: template
+    sensors:
+      garage_temperature:
+        friendly_name: "Garage Temp"
+        value_template: '{{ states.sensor.garage_temps.attributes["temperatureF"] }}'
+        device_class: temperature
+        unit_of_measurement: '°F'
+      garage_humidity:
+        friendly_name: "Garage Humidity"
+        value_template: '{{ states.sensor.garage_temps.attributes["humidity"] }}'
+        device_class: humidity
+        unit_of_measurement: '%'
+      garage_hindex:
+        friendly_name: "Garage Heat Index"      
+        value_template: '{{ states.sensor.garage_temps.attributes["heat_index"] }}'
+        device_class: temperature
+        unit_of_measurement: '°F'

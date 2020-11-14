@@ -1,0 +1,11 @@
+#the gd file will contain your user:pw. It is just a little more secure way to store secrets opposed to plaintext in a yaml
+  - platform: command_line
+    scan_interval: 10
+    switches:
+      garage_door:
+        friendly_name: "Garage Door"
+        command_on: 'curl -K /config/gd -X GET http://192.168.1.232/triggerGD'
+        command_off: 'curl -K /config/gd -X GET  http://192.168.1.232/triggerGD'
+        command_state: 'curl -s GET http://192.168.1.232/getENV' #| grep -zoP "\"door_state\":\"\s*\K[^,]*(?=\s*\")" | sed -e "s:Closed:OFF\n:" -e "s:Open:ON\n:"'
+        value_template: "{{ '\"door_state\":\"Open\"' in value }}"
+        
